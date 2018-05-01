@@ -143,7 +143,7 @@ public class StructuredPerceptronModel implements ICacheAble
             }
             if (tag != predictedTag)
             {
-                for (FeatureFunctionWeights function : queryFeatureFUncionList(instanceForPredict, i, true))
+                for (FeatureFunctionWeights function : queryFeatureFuncionList(instanceForPredict, i, true))
                 {
                     function.update(step, tag, 1);
                     function.update(step, predictedTag, -1);
@@ -195,7 +195,7 @@ public class StructuredPerceptronModel implements ICacheAble
         double[][] net = new double[size][tagSize];
         for (int i = 0; i < size; ++i)
         {
-            LinkedList<FeatureFunctionWeights> functionList = queryFeatureFUncionList(table, i, false);
+            LinkedList<FeatureFunctionWeights> functionList = queryFeatureFuncionList(table, i, false);
             for (int tag = 0; tag < tagSize; ++tag)
             {
                 net[i][tag] = computeScore(functionList, tag);
@@ -264,7 +264,7 @@ public class StructuredPerceptronModel implements ICacheAble
      * @param current
      * @return
      */
-    protected LinkedList<FeatureFunctionWeights> queryFeatureFUncionList(Table table, 
+    protected LinkedList<FeatureFunctionWeights> queryFeatureFuncionList(Table table, 
             int current, boolean train)
     {
         LinkedList<FeatureFunctionWeights> functionList = new LinkedList<FeatureFunctionWeights>();

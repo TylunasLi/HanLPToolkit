@@ -18,14 +18,14 @@ import java.io.DataOutputStream;
 
 /**
  * 特征函数，其实是tag.size个特征函数的集合
- * @author hankcs
+ * @author TylunasLi
  */
 public class FeatureFunctionWeights implements ICacheAble
 {
     /**
-     * 环境参数
+     * 特征名称
      */
-    char[] o;
+    char[] name;
     /**
      * 权值，按照index对应于tag的id
      */
@@ -36,19 +36,19 @@ public class FeatureFunctionWeights implements ICacheAble
      */
     int[] total;
     /**
-     * 上次更新时的训练实例脚步
+     * 上次更新时的训练实例步数
      * 按照index对应于tag的id
      */
     int[] lastStep;
 
     /**
-     * 创建一个特征函数权重表
+     * 创建一个用于训练的特征函数权重表
      * @param o
      * @param tagSize
      */
-    public FeatureFunctionWeights(char[] o, int tagSize)
+    public FeatureFunctionWeights(char[] name, int tagSize)
     {
-        this.o = o;
+        this.name = name;
         w = new int[tagSize];
         total = new int[tagSize];
         lastStep = new int[tagSize];
@@ -64,8 +64,8 @@ public class FeatureFunctionWeights implements ICacheAble
     @Override
     public void save(DataOutputStream out) throws Exception
     {
-        out.writeInt(o.length);
-        for (char c : o)
+        out.writeInt(name.length);
+        for (char c : name)
         {
             out.writeChar(c);
         }
@@ -80,10 +80,10 @@ public class FeatureFunctionWeights implements ICacheAble
     public boolean load(ByteArray byteArray)
     {
         int size = byteArray.nextInt();
-        o = new char[size];
+        name = new char[size];
         for (int i = 0; i < size; ++i)
         {
-            o[i] = byteArray.nextChar();
+            name[i] = byteArray.nextChar();
         }
         size = byteArray.nextInt();
         w = new int[size];
@@ -94,6 +94,12 @@ public class FeatureFunctionWeights implements ICacheAble
         return true;
     }
     
+    /**
+     * 更新权重方法
+     * @param stepCount 当前步数
+     * @param tagId 更新哪个类别的权重
+     * @param delta 更新量
+     */
     public void update(int stepCount, int tagId, int delta)
     {
         if (total == null || lastStep == null)
@@ -107,6 +113,10 @@ public class FeatureFunctionWeights implements ICacheAble
         w[tagId] += delta;
     }
 
+    /**
+     * 权重求平均
+     * @param totalStep 总步数
+     */
     public void average(int totalStep)
     {
         if (total == null || lastStep == null)
@@ -120,4 +130,17 @@ public class FeatureFunctionWeights implements ICacheAble
             w[tagId] = total[tagId]/totalStep;
         }
     }
+
+    public char[] getName()
+    {
+        return name;
+    }
+
+    public int weight(int tagId)
+    {
+        if (tagId > w.length)
+            tagId=w.length-1;
+        return w[tagId];
+    }
+
 }
