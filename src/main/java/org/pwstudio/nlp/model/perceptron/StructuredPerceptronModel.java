@@ -133,7 +133,7 @@ public class StructuredPerceptronModel implements ICacheAble
             if (lastTag != -1)
             {
                 int numStepBeforeUpdate = step - lastStepMatrix[lastTag][tag];
-                totalMatrix[lastTag][tag] += matrix[lastPredicted][predictedTag]*numStepBeforeUpdate;
+                totalMatrix[lastTag][tag] += matrix[lastTag][tag]*numStepBeforeUpdate;
                 lastStepMatrix[lastTag][tag] = step;
                 matrix[lastTag][tag] += 1;
                 numStepBeforeUpdate = step - lastStepMatrix[lastPredicted][predictedTag];
